@@ -5,8 +5,13 @@ const log = (message) => {
   log_e.innerText += `\n${message}`;
 }
 
-ws.onopen = (evnet) => {
-  ws.send('something');
+const send = (data) => {
+  ws.send(JSON.stringify(data));
+  log(`Sent: ${JSON.stringify(data)}`);
+}
+
+ws.onopen = (event) => {
+  send({type: "handshake_start"})
 };
 
 ws.onmessage = (event) => {
@@ -21,7 +26,6 @@ document.addEventListener("keydown", (event) => {
     let value = input_box.value;
 
     input_box.value = "";
-    ws.send(value);
-    log(`Sent: ${value}`);
+    send({type: "message", message: value})
   }
 })
